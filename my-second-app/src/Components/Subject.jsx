@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
@@ -7,20 +8,22 @@ function Subject() {
   const [subjectName, setSubjectName] = useState("");
   const [subjects, setSubjects] = useState([]);
 
+  const baseURL = "https://student-management-backend-26o4.onrender.com";
+
   const fetchSubjects = async () => {
-    const res = await axios.get("http://localhost:8081/subjects");
+    const res = await axios.get(`${baseURL}/subjects`);
     setSubjects(res.data);
   };
 
   const addSubject = async () => {
-    await axios.post("http://localhost:8081/subject", { subjectName });
+    await axios.post(`${baseURL}/subject`, { subjectName });
     setSubjectName("");
     fetchSubjects();
   };
 
   const deleteSubject = async (id) => {
     if (window.confirm("Delete this subject?")) {
-      await axios.delete(`http://localhost:8081/subject/${id}`);
+      await axios.delete(`${baseURL}/subject/${id}`);
       fetchSubjects();
     }
   };
@@ -30,8 +33,9 @@ function Subject() {
       fetchSubjects();
       return;
     }
+
     const res = await axios.get(
-      `http://localhost:8081/subject/search?name=${name}`
+      `${baseURL}/subject/search?name=${encodeURIComponent(name)}`
     );
     setSubjects(res.data);
   };
@@ -75,7 +79,10 @@ function Subject() {
                 <td>{s.id}</td>
                 <td>{s.subjectName}</td>
                 <td>
-                  <button className="delete-btn" onClick={() => deleteSubject(s.id)}>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteSubject(s.id)}
+                  >
                     Delete
                   </button>
                 </td>

@@ -1,35 +1,39 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
 import "../styles/GPA.css";
 
 function GPA() {
-   const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [gpa, setGpa] = useState("");
   const [gpas, setGpas] = useState([]);
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
 
+  const baseURL = "https://student-management-backend-26o4.onrender.com";
+
   const fetchAll = async () => {
-    const res = await axios.get("http://localhost:8081/gpas");
+    const res = await axios.get(`${baseURL}/gpas`);
     setGpas(res.data);
   };
 
   const saveGpa = async () => {
-    await axios.post("http://localhost:8081/gpa", { gpa });
+    await axios.post(`${baseURL}/gpa`, { gpa });
     fetchAll();
   };
 
   const searchByGpa = async () => {
     const res = await axios.get(
-      `http://localhost:8081/gpa/search?value=${gpa}`
+      `${baseURL}/gpa/search?value=${gpa}`
     );
     setGpas(res.data);
   };
 
   const filterRange = async () => {
     const res = await axios.get(
-      `http://localhost:8081/gpa/range?min=${min}&max=${max}`
+      `${baseURL}/gpa/range?min=${min}&max=${max}`
     );
     setGpas(res.data);
   };
@@ -82,7 +86,7 @@ function GPA() {
             {gpas.map((g) => (
               <tr key={g.id} className={g.gpa >= 9 ? "topper" : ""}>
                 <td>{g.id}</td>
-                <td>{user.username || "N/A"}</td>
+                <td>{user?.username || "N/A"}</td>
                 <td>{g.gpa}</td>
                 <td>
                   {g.gpa >= 9

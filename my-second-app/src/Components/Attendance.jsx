@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
@@ -9,13 +10,15 @@ function Attendance() {
   const [attendanceList, setAttendanceList] = useState("");
   const [filterDays, setFilterDays] = useState("");
 
+  const baseURL = "https://student-management-backend-26o4.onrender.com";
+
   const fetchAttendance = async () => {
-    const res = await axios.get("http://localhost:8081/attendance");
+    const res = await axios.get(`${baseURL}/attendance`);
     setAttendanceList(res.data);
   };
 
   const saveAttendance = async () => {
-    await axios.post("http://localhost:8081/attendance", {
+    await axios.post(`${baseURL}/attendance`, {
       presentDays: present,
       absentDays: absent
     });
@@ -26,7 +29,7 @@ function Attendance() {
 
   const filterAttendance = async () => {
     const res = await axios.get(
-      `http://localhost:8081/attendance/filter?days=${filterDays}`
+      `${baseURL}/attendance/filter?days=${filterDays}`
     );
     setAttendanceList(res.data);
   };

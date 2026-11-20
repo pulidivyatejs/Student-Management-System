@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
@@ -17,35 +18,37 @@ function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const courses = await axios.get("http://localhost:8081/courses");
-      const subjects = await axios.get("http://localhost:8081/subjects");
-      const gpas = await axios.get("http://localhost:8081/gpas");
-      const attendance = await axios.get("http://localhost:8081/attendance");
+      const baseURL = "https://student-management-backend-26o4.onrender.com";
+
+      const courses = await axios.get(`${baseURL}/courses`);
+      const subjects = await axios.get(`${baseURL}/subjects`);
+      const gpas = await axios.get(`${baseURL}/gpas`);
+      const attendance = await axios.get(`${baseURL}/attendance`);
 
       setCourseCount(courses.data.length);
       setSubjectCount(subjects.data.length);
 
-    
       if (gpas.data.length > 0) {
         const total = gpas.data.reduce((sum, g) => sum + g.gpa, 0);
         setAvgGpa((total / gpas.data.length).toFixed(2));
       }
 
-      
       if (attendance.data.length > 0) {
         const totalPresent = attendance.data.reduce(
           (sum, a) => sum + a.presentDays,
           0
         );
+
         const totalAbsent = attendance.data.reduce(
           (sum, a) => sum + a.absentDays,
           0
         );
+
         const percent = (totalPresent / (totalPresent + totalAbsent)) * 100;
         setAttendancePercent(percent.toFixed(2));
       }
     } catch (err) {
-      console.error(err);
+      console.error("Dashboard API Error:", err);
     }
   };
 
